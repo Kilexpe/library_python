@@ -11,7 +11,7 @@ def conectar_banco():
             host='localhost',  # Substitua pelo seu host
             database='library_db',  # Substitua pelo seu nome de banco de dados
             user='root',  # Substitua pelo seu usuário do MySQL
-            password='123456'  # Substitua pela sua senha
+            password=''  # Substitua pela sua senha
         )
         if conn.is_connected():
             return conn
@@ -29,14 +29,14 @@ def verificar_login():
 
     if conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM usuario WHERE email = %s AND senha = %s", (email, senha))
+        cursor.execute("SELECT * FROM usuario WHERE email = %s AND senha_hash = %s", (email, senha))
         usuario = cursor.fetchone()
 
         if usuario:
             # Salva os dados do usuário
             nome_usuario = usuario[1]
-            tipo_usuario = usuario[4]
-
+            tipo_usuario = usuario[5]
+            print(usuario[5])
             label_status.configure(text="Login bem-sucedido!", text_color="green")
             app.quit()  # Fecha a janela de login
 

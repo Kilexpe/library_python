@@ -1,47 +1,47 @@
 import customtkinter as ctk
 import sys
-import subprocess  # Importar subprocess para executar outros arquivos Python
-
+import subprocess
+import os
 
 # Função para montar o menu com base no tipo de usuário
 def montar_menu(nome_usuario, tipo_usuario):
-    # Exibir boas-vindas
     label_bemvindo.configure(text=f"Bem-vindo(a), {nome_usuario}!")
 
-    # Definindo os botões comuns
     botoes_comuns = [
-        {"texto": "Reservar Exemplar", "link": "reserva_livro.py"},  # Alterando para o script Python
-        {"texto": "Editar/Cancelar Reserva", "link": "editar_reserva.html"},
-        {"texto": "Registrar Venda/Empréstimo", "link": "movimentacao.html"},
-        {"texto": "Histórico por Cliente", "link": "historico.html"},
-        {"texto": "Logout", "link": "login.html"}
+        {"texto": "Reservar Exemplar", "link": "reservar_livro.py"},
+        {"texto": "Editar/Cancelar Reserva", "link": "editar_reserva.py"},
+        {"texto": "Registrar Venda/Empréstimo", "link": "movimentacao.py"},
+        {"texto": "Histórico por Cliente", "link": "historico_cliente.py"},
+        {"texto": "Logout", "link": "logout"}  # link especial para logout
     ]
 
-    # Definindo os botões específicos do gerente
     botoes_gerente = [
-        {"texto": "Cadastrar Livro", "link": "cadastro_livro.py"},  # Modificar aqui
-        {"texto": "Relatório por Período", "link": "relatorio.html"}
+        {"texto": "Cadastrar Livro", "link": "cadastro_livro.py"},
+        {"texto": "Relatório por Período", "link": "relatorio.py"}
     ]
 
-    # Montando o menu de acordo com o tipo de usuário
     botoes = botoes_comuns
     if tipo_usuario == "gerente":
         botoes += botoes_gerente
 
-    # Criando os botões
     for btn in botoes:
-        botao = ctk.CTkButton(frame_menu, text=btn["texto"], command=lambda link=btn["link"]: abrir_link(link))
+        botao = ctk.CTkButton(frame_menu, text=btn["texto"],
+                               command=lambda link=btn["link"]: abrir_link(link))
         botao.pack(pady=5)
-
 
 # Função para abrir o link ou executar o arquivo Python
 def abrir_link(link):
-    if link.endswith(".py"):
-        # Se o link for um arquivo Python, executa o script
-        subprocess.Popen([sys.executable, link])  # Executa o arquivo Python
+    if link == "logout":
+        # Fecha o dashboard
+        app.destroy()
+        # Abre a tela de login novamente
+        login_script = os.path.join(os.path.dirname(__file__), "login.py")
+        subprocess.Popen([sys.executable, login_script])
+    elif link.endswith(".py"):
+        # Executa o outro script Python em paralelo
+        subprocess.Popen([sys.executable, link, nome_usuario, tipo_usuario])
     else:
         print(f"Abrindo {link}")
-
 
 # Criação da interface
 app = ctk.CTk()

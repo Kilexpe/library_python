@@ -9,7 +9,7 @@ def conectar_banco():
             host='localhost',       # Substitua pelo seu host
             database='library_db',   # Substitua pelo seu nome de banco de dados
             user='root',     # Substitua pelo seu usuário do MySQL
-            password='123456'    # Substitua pela sua senha
+            password=''    # Substitua pela sua senha
         )
         if conn.is_connected():
             return conn
